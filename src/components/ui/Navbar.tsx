@@ -48,7 +48,7 @@ export const Navbar: React.FC = () => {
               <User size={18} className="text-light" />
             </div>
             <div className="d-none d-md-block text-start">
-              <div className="fw-semibold small">{user?.name}</div>
+              <div className="fw-semibold small">{user ? `${user.firstName} ${user.lastName}` : 'Guest User'}</div>
               <div className="text-secondary small d-flex align-items-center gap-1">
                 <ShieldCheck size={12} className="text-success" /> Enterprise Plan
               </div>

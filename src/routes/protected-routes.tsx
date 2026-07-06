@@ -7,14 +7,17 @@ import { ContentGenPage } from '../pages/ContentGenPage';
 import { AIEnginePage } from '../pages/AIEnginePage';
 import { SettingsPage } from '../pages/SettingsPage';
 import { NotFound } from '../pages/NotFound';
+import { ProtectedGuard } from '../features/auth';
 
 export const ProtectedRoutes = (
-  <Route element={<MainLayout />}>
-    <Route index element={<Dashboard />} />
-    <Route path="/prompts" element={<PromptWorkspacePage />} />
-    <Route path="/content" element={<ContentGenPage />} />
-    <Route path="/ai-engine" element={<AIEnginePage />} />
-    <Route path="/settings" element={<SettingsPage />} />
-    <Route path="*" element={<NotFound />} />
+  <Route element={<ProtectedGuard />}>
+    <Route element={<MainLayout />}>
+      <Route index element={<Dashboard />} />
+      <Route path="/prompts" element={<PromptWorkspacePage />} />
+      <Route path="/content" element={<ContentGenPage />} />
+      <Route path="/ai-engine" element={<AIEnginePage />} />
+      <Route path="/settings" element={<SettingsPage />} />
+      <Route path="*" element={<NotFound />} />
+    </Route>
   </Route>
 );

@@ -1,7 +1,7 @@
 :root {
   --bg-primary: #090d16;
   --bg-secondary: #111827;
-  --bg-card: rgba(17, 24, 39, 0.7);
+  --bg-card: rgba(17, 24, 39, 0.75);
   --accent-purple: #8b5cf6;
   --accent-indigo: #6366f1;
   --accent-cyan: #06b6d4;
@@ -30,16 +30,16 @@ h1, h2, h3, h4, h5, h6 {
 
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-glass);
   border-radius: 16px;
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.35);
+  box-shadow: 0 10px 35px -10px rgba(139, 92, 246, 0.25);
 }
 
 .gradient-text {
@@ -63,4 +63,19 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-2px);
   box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
   color: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #0d1322 !important;
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25) !important;
+  color: #f9fafb !important;
+}
+
+.border-purple-subtle {
+  border-color: rgba(139, 92, 246, 0.25) !important;
+}
+
+.hover-underline:hover {
+  text-decoration: underline !important;
 }

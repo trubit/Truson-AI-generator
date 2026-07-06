@@ -170,7 +170,7 @@ export const LandingPage: React.FC = () => {
                   <h4 className="fw-bold mb-0">Enterprise Foundation Ready</h4>
                 </div>
                 <p className="text-secondary small mb-0">
-                  Phase 2 provides a fully responsive UI/UX system, light/dark theme persistence, and modular workspace components.
+                  Truson-AI provides a fully responsive UI/UX system, light/dark theme persistence, and modular workspace components.
                 </p>
               </Card>
             </div>

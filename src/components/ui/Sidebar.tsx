@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Code2, FileText, Settings, Cpu, Layers } from 'lucide-react';
+import { LayoutDashboard, Code2, FileText, Settings, Cpu, Sparkles } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const navItems = [
@@ -42,12 +42,17 @@ export const Sidebar: React.FC = () => {
         ))}
       </ul>
 
-      <div className="glass-card p-3 mt-auto rounded-3">
-        <div className="d-flex align-items-center gap-2 mb-2 text-purple fw-bold small">
-          <Layers size={16} /> Enterprise Phase 1
+      <div className="glass-card p-3 mt-auto rounded-3 border-purple">
+        <div className="d-flex align-items-center justify-content-between mb-1">
+          <div className="d-flex align-items-center gap-1.5 text-purple fw-bold small">
+            <Sparkles size={15} /> Truson-AI Pro
+          </div>
+          <span className="badge bg-purple-subtle text-purple border border-purple" style={{ fontSize: '0.65rem' }}>
+            Active
+          </span>
         </div>
-        <p className="text-secondary small mb-0" style={{ fontSize: '0.8rem' }}>
-          Foundation & Provider Abstraction Ready. Next: Phase 2 AI Prompt Generators.
+        <p className="text-secondary small mb-0" style={{ fontSize: '0.78rem' }}>
+          Unlimited AI Prompts & Generation Workspaces.
         </p>
       </div>
     </aside>

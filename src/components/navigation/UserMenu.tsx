@@ -18,7 +18,7 @@ export const UserMenu: React.FC = () => {
           <User size={18} />
         </div>
         <div className="d-none d-md-block text-start">
-          <div className="fw-semibold small text-light">{user?.name || 'Architect User'}</div>
+          <div className="fw-semibold small text-light">{user ? `${user.firstName} ${user.lastName}` : 'Architect User'}</div>
           <div className="text-secondary small d-flex align-items-center gap-1" style={{ fontSize: '0.75rem' }}>
             <ShieldCheck size={12} className="text-success" /> Enterprise
           </div>

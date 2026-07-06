@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import aiRoutes from '../modules/ai/routes/ai.routes';
 import promptRoutes from '../modules/prompts/routes/prompt.routes';
+import { authRouter } from '../modules/auth/routes/auth.routes';
 import { aiRegistryService } from '../modules/ai/services/ai-registry.service';
 import mongoose from 'mongoose';
 
@@ -34,6 +35,7 @@ router.get('/health', async (_req: Request, res: Response) => {
 });
 
 // Register Module Routes
+router.use('/auth', authRouter);
 router.use('/ai', aiRoutes);
 router.use('/prompts', promptRoutes);
 

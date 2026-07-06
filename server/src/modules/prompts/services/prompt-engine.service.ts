@@ -13,7 +13,7 @@ export class PromptEngineService {
   }
 
   /**
-   * Phase 1 Architecture Foundation Stub: Prepares metadata definition for prompt generator requests
+   * Prepares architectural developer prompt structures for requested technology and domain
    */
   public async prepareDeveloperPrompt(params: {
     category: PromptCategory;

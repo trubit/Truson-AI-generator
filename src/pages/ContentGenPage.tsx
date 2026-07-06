@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Sparkles, Edit3, Type, CheckCircle } from 'lucide-react';
+import { FileText, Sparkles, CheckCircle } from 'lucide-react';
 
 export const ContentGenPage: React.FC = () => {
   const contentTypes = [
@@ -20,7 +20,7 @@ export const ContentGenPage: React.FC = () => {
           <FileText className="text-cyan" /> Content Generation Engine
         </h2>
         <p className="text-secondary">
-          Phase 1 Architecture Foundation prepared for multi-channel content creation and writing assistant features.
+          Architecture Foundation prepared for multi-channel content creation and writing assistant features.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export const ContentGenPage: React.FC = () => {
                 <span className="badge bg-cyan-subtle text-cyan border border-cyan px-2 py-1 small">
                   <CheckCircle size={12} className="me-1" /> Foundation Scaffolding Active
                 </span>
-                <span className="text-secondary small">Phase 2</span>
+                <span className="text-secondary small">Enterprise</span>
               </div>
             </div>
           </div>

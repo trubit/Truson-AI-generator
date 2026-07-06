@@ -1,40 +1,52 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
 
 export const AuthLayout: React.FC = () => {
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark p-4 position-relative overflow-hidden">
-      {/* Background Glow Orbs */}
+    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark p-3 position-relative overflow-hidden">
+      {/* Dynamic Background Glow Effects */}
       <div
-        className="position-absolute rounded-circle opacity-20 pointer-events-none"
+        className="position-absolute rounded-circle opacity-25 pointer-events-none"
         style={{
-          width: '500px',
-          height: '500px',
+          width: '450px',
+          height: '450px',
           background: 'radial-gradient(circle, #8b5cf6 0%, transparent 70%)',
-          top: '-100px',
-          left: '-100px',
+          top: '-120px',
+          left: '-120px',
+          filter: 'blur(40px)',
         }}
       />
       <div
         className="position-absolute rounded-circle opacity-20 pointer-events-none"
         style={{
-          width: '500px',
-          height: '500px',
+          width: '450px',
+          height: '450px',
           background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
-          bottom: '-100px',
-          right: '-100px',
+          bottom: '-120px',
+          right: '-120px',
+          filter: 'blur(40px)',
         }}
       />
 
-      <div className="w-100 max-w-md">
-        <div className="text-center mb-4">
-          <div className="d-inline-flex align-items-center justify-content-center p-3 rounded-4 bg-purple bg-opacity-20 border border-purple mb-3">
-            <Sparkles size={32} className="text-purple" />
+      <div className="w-100" style={{ maxWidth: '390px', zIndex: 2 }}>
+        {/* Brand Header */}
+        <div className="text-center mb-3">
+          <div className="d-inline-flex align-items-center justify-content-center p-2 rounded-4 bg-dark bg-opacity-80 border border-purple-subtle shadow-lg mb-2">
+            <img
+              src="/logo.png"
+              alt="Truson AI Logo"
+              style={{ width: '42px', height: '42px', objectFit: 'cover', borderRadius: '10px' }}
+            />
           </div>
-          <h2 className="fw-bold gradient-text">Truson-AI-Generator</h2>
-          <p className="text-secondary small">Next-Gen Enterprise AI Platform</p>
+          <h4 className="fw-bold gradient-text mb-0" style={{ fontFamily: 'Outfit', letterSpacing: '-0.02em' }}>
+            Truson-AI
+          </h4>
+          <p className="text-secondary small mb-0" style={{ fontSize: '0.78rem' }}>
+            Enterprise AI Platform
+          </p>
         </div>
+
+        {/* Auth Card Outlet */}
         <Outlet />
       </div>
     </div>

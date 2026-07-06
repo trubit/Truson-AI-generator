@@ -1,27 +1,47 @@
 import { create } from 'zustand';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'user';
-}
+import { IUser } from '@shared';
+import { setAccessToken } from '../api/client';
+import { authApi } from '../features/auth/api/auth.api';
 
 interface AuthState {
-  user: User | null;
+  user: IUser | null;
   isAuthenticated: boolean;
-  setUser: (user: User | null) => void;
-  logout: () => void;
+  isLoading: boolean;
+  setUser: (user: IUser | null, accessToken?: string) => void;
+  setLoading: (loading: boolean) => void;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: {
-    id: 'user_demo_1',
-    name: 'Enterprise Architect',
-    email: 'architect@truson.ai',
-    role: 'admin',
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+
+  setUser: (user, accessToken) => {
+    if (accessToken) setAccessToken(accessToken);
+    set({ user, isAuthenticated: Boolean(user), isLoading: false });
   },
-  isAuthenticated: true,
-  setUser: (user) => set({ user, isAuthenticated: Boolean(user) }),
-  logout: () => set({ user: null, isAuthenticated: false }),
+
+  setLoading: (isLoading) => set({ isLoading }),
+
+  logout: async () => {
+    try {
+      await authApi.logout();
+    } catch (_) {}
+    setAccessToken(null);
+    set({ user: null, isAuthenticated: false, isLoading: false });
+  },
+
+  checkAuth: async () => {
+    set({ isLoading: true });
+    try {
+      const res = await authApi.refreshToken();
+      if (res.user && res.accessToken) {
+        get().setUser(res.user, res.accessToken);
+        return;
+      }
+    } catch (_) {}
+    set({ user: null, isAuthenticated: false, isLoading: false });
+  },
 }));

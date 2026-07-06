@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Code2, FileText, Settings, Cpu, Layers, Bot, Compass } from 'lucide-react';
+import { LayoutDashboard, Code2, FileText, Settings, Cpu, Bot, Compass, Sparkles } from 'lucide-react';
 import { useLayoutStore } from '../../store/layout-store';
 
 export const Sidebar: React.FC = () => {
@@ -46,12 +46,17 @@ export const Sidebar: React.FC = () => {
       </ul>
 
       {!isSidebarCollapsed && (
-        <div className="glass-card p-3 mt-auto rounded-3">
-          <div className="d-flex align-items-center gap-2 mb-2 text-purple fw-bold small">
-            <Layers size={16} /> Enterprise UI/UX
+        <div className="glass-card p-3 mt-auto rounded-3 border-purple">
+          <div className="d-flex align-items-center justify-content-between mb-1">
+            <div className="d-flex align-items-center gap-1.5 text-purple fw-bold small">
+              <Sparkles size={15} /> Truson-AI Pro
+            </div>
+            <span className="badge bg-purple-subtle text-purple border border-purple" style={{ fontSize: '0.65rem' }}>
+              Active
+            </span>
           </div>
-          <p className="text-secondary small mb-0" style={{ fontSize: '0.8rem' }}>
-            Phase 2 Design System & Workspaces Active.
+          <p className="text-secondary small mb-0" style={{ fontSize: '0.78rem' }}>
+            Unlimited AI Prompts & Generation Workspaces.
           </p>
         </div>
       )}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PromptCategorySelector } from '../components/PromptCategorySelector';
-import { Card, Button, Input, TextArea } from '../../../components/ui';
+import { Card, Button, TextArea } from '../../../components/ui';
 import { Code2, Sparkles, Copy, Check, Terminal } from 'lucide-react';
+import apiClient from '../../../api/client';
 import toast from 'react-hot-toast';
 
 export const PromptWorkspacePage: React.FC = () => {
@@ -10,19 +11,34 @@ export const PromptWorkspacePage: React.FC = () => {
   const [selectedArea, setSelectedArea] = useState('Frontend');
   const [requirements, setRequirements] = useState('');
   const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleGenerate = (e: React.FormEvent) => {
+  const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!requirements.trim()) {
       toast.error('Please enter prompt requirements');
       return;
     }
 
-    const template = `You are an expert Principal Engineer in ${selectedLanguage} and ${selectedFramework} specializing in ${selectedArea}.\n\nTask: ${requirements}\n\nRequirements:\n1. Adhere to enterprise SOLID principles.\n2. Include strict input validation with Zod.\n3. Implement error handling & logging.\n4. Provide production-ready ${selectedLanguage} code without placeholder comments.`;
+    setIsLoading(true);
+    try {
+      const res = await apiClient.post('/prompts/prepare', {
+        category: selectedArea,
+        promptType: 'Coding Prompts',
+        techStack: selectedLanguage,
+        requirements,
+        architectureDetails: `Framework: ${selectedFramework}`,
+      });
 
-    setGeneratedPrompt(template);
-    toast.success('Prompt Architecture Generated!');
+      const promptText = res.data?.data?.generatedPrompt || '';
+      setGeneratedPrompt(promptText);
+      toast.success('Prompt Architecture Generated!');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to generate prompt.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCopy = () => {
@@ -78,7 +94,7 @@ export const PromptWorkspacePage: React.FC = () => {
                 onChange={(e) => setRequirements(e.target.value)}
               />
 
-              <Button variant="glow" className="w-100 mt-2" type="submit" leftIcon={<Sparkles size={18} />}>
+              <Button variant="glow" className="w-100 mt-2" type="submit" isLoading={isLoading} leftIcon={<Sparkles size={18} />}>
                 Generate Enterprise Prompt
               </Button>
             </form>
