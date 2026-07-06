@@ -12,7 +12,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "tsx server/src/server.ts",
-    "test": "tsc -b && tsc -p tsconfig.server.json"
+    "test": "playwright test",
+    "test:tsc": "tsc -b && tsc -p tsconfig.server.json",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3",
@@ -50,6 +52,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@playwright/test": "^1.61.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",

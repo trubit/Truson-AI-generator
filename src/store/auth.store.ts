@@ -28,7 +28,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     try {
       await authApi.logout();
-    } catch (_) {}
+    } catch (_err) {
+      // Ignore logout errors
+    }
     setAccessToken(null);
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
@@ -41,7 +43,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         get().setUser(res.user, res.accessToken);
         return;
       }
-    } catch (_) {}
+    } catch (_err) {
+      // Ignore refresh token errors
+    }
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
 }));
