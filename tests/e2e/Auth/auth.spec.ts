@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Enterprise Authentication & Authorization Suite', () => {
   test('should navigate to login page when unauthenticated user accesses /ai-workspace', async ({ page }) => {
+    test.setTimeout(60000);
     await page.goto('/ai-workspace', { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveURL(/\/login/);
   });

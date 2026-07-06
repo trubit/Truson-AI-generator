@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { IAIProvider } from '../../interfaces/provider.interface';
 import { AIProviderId, AIGenerateOptions, AIGenerateResult } from '../../../../../../shared/index';
 import { logger } from '../../../../config/logger.config';
+import { AppError } from '../../../../middleware/error.middleware';
 
 export class ClaudeProvider implements IAIProvider {
   public readonly id: AIProviderId = 'claude';
@@ -22,12 +23,7 @@ export class ClaudeProvider implements IAIProvider {
   }
 
   public async healthCheck(): Promise<boolean> {
-    try {
-      return Boolean(this.apiKey && !this.apiKey.includes('placeholder'));
-    } catch (error) {
-      logger.error(`Claude Health Check Failed: ${error}`);
-      return false;
-    }
+    return Boolean(this.apiKey && !this.apiKey.includes('placeholder'));
   }
 
   public async generateCompletion(
@@ -39,45 +35,34 @@ export class ClaudeProvider implements IAIProvider {
 
     logger.info(`[ClaudeProvider] Generating completion with model: ${model}`);
 
-    if (this.client) {
-      try {
-        const response = await this.client.messages.create({
-          model,
-          max_tokens: options?.maxTokens || 2048,
-          messages: [{ role: 'user', content: prompt }],
-        });
-
-        const text = response.content[0]?.type === 'text' ? response.content[0].text : '';
-        return {
-          provider: this.id,
-          model,
-          text,
-          usage: {
-            promptTokens: response.usage.input_tokens,
-            completionTokens: response.usage.output_tokens,
-            totalTokens: response.usage.input_tokens + response.usage.output_tokens,
-          },
-          latencyMs: Date.now() - startTime,
-          timestamp: new Date().toISOString(),
-        };
-      } catch (err: any) {
-        logger.warn(`Anthropic Live API error: ${err.message}. Falling back to dynamic completion.`);
-      }
+    if (!this.client) {
+      throw new AppError(`Anthropic Claude API key is not configured.`, 400);
     }
 
-    const outputText = `// Enterprise Architecture Generated Code (Claude 3.5 Sonnet)\n// Prompt: ${prompt}\n\nexport const claudeArchitecture = {\n  pattern: 'Event-Driven Microservices',\n  resilience: 'Circuit Breaker + Retry Strategy',\n  timestamp: new Date().toISOString()\n};`;
+    try {
+      const response = await this.client.messages.create({
+        model,
+        max_tokens: options?.maxTokens || 2048,
+        system: options?.systemPrompt || 'You are Truson-AI, an enterprise software architecture AI generator.',
+        messages: [{ role: 'user', content: prompt }],
+      });
 
-    return {
-      provider: this.id,
-      model,
-      text: outputText,
-      usage: {
-        promptTokens: prompt.length / 4,
-        completionTokens: outputText.length / 4,
-        totalTokens: (prompt.length + outputText.length) / 4,
-      },
-      latencyMs: Date.now() - startTime,
-      timestamp: new Date().toISOString(),
-    };
+      const text = response.content[0]?.type === 'text' ? response.content[0].text : '';
+      return {
+        provider: this.id,
+        model,
+        text,
+        usage: {
+          promptTokens: response.usage.input_tokens,
+          completionTokens: response.usage.output_tokens,
+          totalTokens: response.usage.input_tokens + response.usage.output_tokens,
+        },
+        latencyMs: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (err: any) {
+      logger.warn(`Anthropic Live API error: ${err.message || err}.`);
+      throw err;
+    }
   }
 }

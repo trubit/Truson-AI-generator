@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { IAIProvider } from '../../interfaces/provider.interface';
 import { AIProviderId, AIGenerateOptions, AIGenerateResult } from '../../../../../../shared/index';
 import { logger } from '../../../../config/logger.config';
+import { AppError } from '../../../../middleware/error.middleware';
 
 export class GeminiProvider implements IAIProvider {
   public readonly id: AIProviderId = 'gemini';
@@ -22,12 +23,7 @@ export class GeminiProvider implements IAIProvider {
   }
 
   public async healthCheck(): Promise<boolean> {
-    try {
-      return Boolean(this.apiKey && !this.apiKey.includes('Placeholder'));
-    } catch (error) {
-      logger.error(`Gemini Health Check Failed: ${error}`);
-      return false;
-    }
+    return Boolean(this.apiKey && !this.apiKey.includes('Placeholder'));
   }
 
   public async generateCompletion(
@@ -39,16 +35,47 @@ export class GeminiProvider implements IAIProvider {
 
     logger.info(`[GeminiProvider] Generating completion with model: ${model}`);
 
-    if (this.genAI) {
+    if (!this.genAI) {
+      throw new AppError(`Google Gemini API key is not configured.`, 400);
+    }
+
+    try {
+      // Append system prompt to user prompt for Gemini API models that don't have separate system role params
+      const compiledPrompt = options?.systemPrompt 
+        ? `${options.systemPrompt}\n\nUser Input:\n${prompt}`
+        : prompt;
+
+      const modelInstance = this.genAI.getGenerativeModel({ model });
+      const result = await modelInstance.generateContent(compiledPrompt);
+      const response = await result.response;
+      const text = response.text();
+
+      return {
+        provider: this.id,
+        model,
+        text,
+        usage: {
+          promptTokens: prompt.length / 4,
+          completionTokens: text.length / 4,
+          totalTokens: (prompt.length + text.length) / 4,
+        },
+        latencyMs: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (err: any) {
+      logger.warn(`Google Gemini Live API error (${model}): ${err.message || err}. Retrying with gemini-2.0-flash.`);
       try {
-        const modelInstance = this.genAI.getGenerativeModel({ model });
-        const result = await modelInstance.generateContent(prompt);
+        const fallbackModel = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        const compiledPrompt = options?.systemPrompt 
+          ? `${options.systemPrompt}\n\nUser Input:\n${prompt}`
+          : prompt;
+        const result = await fallbackModel.generateContent(compiledPrompt);
         const response = await result.response;
         const text = response.text();
 
         return {
           provider: this.id,
-          model,
+          model: 'gemini-2.0-flash',
           text,
           usage: {
             promptTokens: prompt.length / 4,
@@ -58,45 +85,10 @@ export class GeminiProvider implements IAIProvider {
           latencyMs: Date.now() - startTime,
           timestamp: new Date().toISOString(),
         };
-      } catch (err: any) {
-        logger.warn(`Google Gemini Live API error (${model}): ${err.message}. Retrying with gemini-2.0-flash.`);
-        try {
-          const fallbackModel = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-          const result = await fallbackModel.generateContent(prompt);
-          const response = await result.response;
-          const text = response.text();
-
-          return {
-            provider: this.id,
-            model: 'gemini-2.0-flash',
-            text,
-            usage: {
-              promptTokens: prompt.length / 4,
-              completionTokens: text.length / 4,
-              totalTokens: (prompt.length + text.length) / 4,
-            },
-            latencyMs: Date.now() - startTime,
-            timestamp: new Date().toISOString(),
-          };
-        } catch (fbErr: any) {
-          logger.warn(`Gemini fallback model also failed: ${fbErr.message}`);
-        }
+      } catch (fbErr: any) {
+        logger.warn(`Gemini fallback model also failed: ${fbErr.message || fbErr}`);
+        throw fbErr;
       }
     }
-
-    const outputText = `// Enterprise Architecture Generated Code (Google Gemini 2.5)\n// Prompt: ${prompt}\n\nexport const geminiSolution = {\n  model: '${model}',\n  analysis: 'Full-Stack Codebase Evaluation',\n  timestamp: new Date().toISOString()\n};`;
-
-    return {
-      provider: this.id,
-      model,
-      text: outputText,
-      usage: {
-        promptTokens: prompt.length / 4,
-        completionTokens: outputText.length / 4,
-        totalTokens: (prompt.length + outputText.length) / 4,
-      },
-      latencyMs: Date.now() - startTime,
-      timestamp: new Date().toISOString(),
-    };
   }
 }

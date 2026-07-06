@@ -5,6 +5,9 @@ import { ClaudeProvider } from '../providers/claude/claude.provider';
 import { GeminiProvider } from '../providers/gemini/gemini.provider';
 import { logger } from '../../../config/logger.config';
 import { AppError } from '../../../middleware/error.middleware';
+import { AIProviderConfigModel } from '../models/provider-config.model';
+import { AIGenerationHistoryModel } from '../models/ai-history.model';
+import mongoose from 'mongoose';
 
 export class AIRegistryService {
   private static instance: AIRegistryService;
@@ -13,6 +16,9 @@ export class AIRegistryService {
 
   private constructor() {
     this.initializeDefaultProviders();
+    this.syncConfigurationsWithDatabase().catch((err) => {
+      logger.warn(`[AIRegistry] Failed to sync provider configs with database: ${err.message}`);
+    });
   }
 
   public static getInstance(): AIRegistryService {
@@ -26,6 +32,38 @@ export class AIRegistryService {
     this.registerProvider(new OpenAIProvider());
     this.registerProvider(new ClaudeProvider());
     this.registerProvider(new GeminiProvider());
+  }
+
+  /**
+   * Sync default providers to MongoDB AIProviderConfig database table
+   */
+  private async syncConfigurationsWithDatabase(): Promise<void> {
+    if (mongoose.connection.readyState !== 1) {
+      logger.warn('[AIRegistry] Database not connected. Skipping provider config database sync.');
+      return;
+    }
+
+    const defaultConfigs: Array<{ providerName: AIProviderId; priority: number }> = [
+      { providerName: 'openai', priority: 1 },
+      { providerName: 'claude', priority: 2 },
+      { providerName: 'gemini', priority: 3 },
+    ];
+
+    for (const config of defaultConfigs) {
+      const exists = await AIProviderConfigModel.findOne({ providerName: config.providerName });
+      if (!exists) {
+        await AIProviderConfigModel.create({
+          providerName: config.providerName,
+          status: 'ENABLED',
+          priority: config.priority,
+          configurationMetadata: {
+            maxTokensDefault: 2048,
+            temperatureDefault: 0.7,
+          },
+        });
+        logger.info(`[AIRegistry] Initialized DB config for provider: ${config.providerName}`);
+      }
+    }
   }
 
   /**
@@ -51,7 +89,7 @@ export class AIRegistryService {
   }
 
   /**
-   * Switch active AI provider dynamically without altering business logic
+   * Switch active AI provider dynamically
    */
   public switchProvider(providerId: AIProviderId): IAIProvider {
     const provider = this.getProvider(providerId);
@@ -68,14 +106,140 @@ export class AIRegistryService {
   }
 
   /**
-   * Execute completion using the currently active provider or specific provider override
+   * Generate completion with failover support
    */
   public async generateCompletion(
     prompt: string,
-    options?: AIGenerateOptions & { providerId?: AIProviderId }
+    options?: AIGenerateOptions & {
+      providerId?: AIProviderId;
+      userId?: string;
+      category?: string;
+    }
   ): Promise<AIGenerateResult> {
-    const provider = this.getProvider(options?.providerId);
-    return provider.generateCompletion(prompt, options);
+    const requestedId = options?.providerId || this.activeProviderId;
+    const userId = options?.userId;
+    const category = options?.category || 'AI Generation';
+
+    // Build try-order list based on database configs and priorities
+    let tryOrder: AIProviderId[] = [requestedId];
+    try {
+      if (mongoose.connection.readyState === 1) {
+        const dbConfigs = await AIProviderConfigModel.find({ status: 'ENABLED' })
+          .sort({ priority: 1 })
+          .select('providerName');
+        const dbOrder = dbConfigs.map((c) => c.providerName as AIProviderId);
+        
+        // Ensure requested provider is first in trial order, then attach the rest
+        if (dbOrder.length > 0) {
+          const filtered = dbOrder.filter((id) => id !== requestedId);
+          tryOrder = [requestedId, ...filtered];
+        }
+      } else {
+        // Fallback to registered provider list when database is offline
+        const registeredKeys = Array.from(this.providers.keys());
+        const filtered = registeredKeys.filter((id) => id !== requestedId);
+        tryOrder = [requestedId, ...filtered];
+      }
+    } catch (err) {
+      logger.warn(`[AIRegistry] Failed to fetch priorities from database, using static fallback: ${err}`);
+      // Standard static backup path
+      const backupOrder: AIProviderId[] = ['openai', 'claude', 'gemini'];
+      tryOrder = [requestedId, ...backupOrder.filter((id) => id !== requestedId)];
+    }
+
+    let lastError: Error | null = null;
+    const startTime = Date.now();
+
+    for (const providerId of tryOrder) {
+      try {
+        const provider = this.getProvider(providerId);
+        logger.info(`[AIRegistry] Attempting completion using provider: ${provider.name} (${providerId})`);
+        
+        const result = await provider.generateCompletion(prompt, options);
+
+        // Record execution history log asynchronously
+        this.logGenerationHistory({
+          userId,
+          providerId,
+          category,
+          prompt,
+          options,
+          responseText: result.text,
+          latency: Date.now() - startTime,
+          status: 'SUCCESS',
+          usage: result.usage,
+        }).catch((err) => logger.error(`[AIRegistry] Failed to save history log: ${err.message}`));
+
+        return result;
+      } catch (err: any) {
+        logger.warn(`[AIRegistry] Provider ${providerId} failed: ${err.message || err}. Attempting failover.`);
+        lastError = err;
+      }
+    }
+
+    // If all providers in loop failed, log the failure event
+    this.logGenerationHistory({
+      userId,
+      providerId: requestedId,
+      category,
+      prompt,
+      options,
+      responseText: `FAILOVER ERROR: All AI Providers failed. Last error: ${lastError?.message}`,
+      latency: Date.now() - startTime,
+      status: 'FAILED',
+    }).catch((err) => logger.error(`[AIRegistry] Failed to save error history log: ${err.message}`));
+
+    throw new AppError(
+      `AI Engine failover exhausted. All providers failed. Last error: ${lastError?.message || 'unknown'}`,
+      503
+    );
+  }
+
+  /**
+   * Save execution outcome into database
+   */
+  private async logGenerationHistory(params: {
+    userId?: string;
+    providerId: AIProviderId;
+    category: string;
+    prompt: string;
+    options?: AIGenerateOptions;
+    responseText: string;
+    latency: number;
+    status: 'SUCCESS' | 'FAILED';
+    usage?: { promptTokens: number; completionTokens: number; totalTokens: number };
+  }): Promise<void> {
+    if (!params.userId || mongoose.connection.readyState !== 1) {
+      return;
+    }
+
+    try {
+      await AIGenerationHistoryModel.create({
+        user: new mongoose.Types.ObjectId(params.userId),
+        provider: params.providerId,
+        category: params.category,
+        request: {
+          prompt: params.prompt,
+          model: params.options?.model,
+          temperature: params.options?.temperature,
+          maxTokens: params.options?.maxTokens,
+          systemPrompt: params.options?.systemPrompt,
+        },
+        response: {
+          text: params.responseText,
+          modelUsed: params.options?.model || params.providerId,
+        },
+        tokenUsage: params.usage || {
+          promptTokens: Math.ceil(params.prompt.length / 4),
+          completionTokens: Math.ceil(params.responseText.length / 4),
+          totalTokens: Math.ceil((params.prompt.length + params.responseText.length) / 4),
+        },
+        processingTime: params.latency,
+        status: params.status,
+      });
+    } catch (err: any) {
+      logger.error(`[AIRegistry] Error writing to AIGenerationHistoryModel: ${err.message}`);
+    }
   }
 
   /**
