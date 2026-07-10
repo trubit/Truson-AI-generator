@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import aiRoutes from '../modules/ai/routes/ai.routes';
 import promptRoutes from '../modules/prompts/routes/prompt.routes';
 import chatRoutes from '../modules/ai-chat/routes/chat.routes';
+import contentRouter from '../modules/content/routes/content.routes';
+import collectionRouter from '../modules/content/routes/collection.routes';
 import { authRouter } from '../modules/auth/routes/auth.routes';
 import { aiRegistryService } from '../modules/ai/services/ai-registry.service';
 import mongoose from 'mongoose';
@@ -40,5 +42,7 @@ router.use('/auth', authRouter);
 router.use('/ai', aiRoutes);
 router.use('/prompts', promptRoutes);
 router.use('/chat', chatRoutes);
+router.use('/content', contentRouter);
+router.use('/collections', collectionRouter);
 
 export default router;

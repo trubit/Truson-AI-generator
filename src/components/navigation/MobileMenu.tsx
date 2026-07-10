@@ -12,7 +12,7 @@ export const MobileMenu: React.FC = () => {
     { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
     { label: 'AI Chat Workspace', icon: Bot, to: '/ai-workspace' },
     { label: 'Coding & Dev Prompts', icon: Code2, to: '/prompts' },
-    { label: 'Content Generator', icon: FileText, to: '/content' },
+    { label: 'Writing Studio', icon: FileText, to: '/content' },
     { label: 'AI Architecture', icon: Cpu, to: '/ai-engine' },
     { label: 'Platform Settings', icon: Settings, to: '/settings' },
   ];

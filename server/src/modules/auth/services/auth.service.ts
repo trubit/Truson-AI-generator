@@ -76,8 +76,8 @@ export class AuthService {
       throw new Error('Your account has been suspended. Please contact support.');
     }
 
-    // Auto-verify in development if needed
-    if (!user.isEmailVerified && process.env.NODE_ENV !== 'development') {
+    // Auto-verify in development or test environments if needed
+    if (!user.isEmailVerified && process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
       throw new Error('Please verify your email address before logging in.');
     }
 
