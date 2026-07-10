@@ -22,6 +22,19 @@ export default defineConfig({
       '/api': {
         target: `http://localhost:${targetPort}`,
         changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('error', (err, _req, res: any) => {
+            if (err.message.includes('ECONNREFUSED')) {
+              if (!res.headersSent) {
+                res.writeHead(503, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ 
+                  success: false, 
+                  message: 'Neurova backend is starting up, please try again in a few seconds...' 
+                }));
+              }
+            }
+          });
+        }
       },
     },
   },
