@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
             <Sparkles size={22} color="#ffffff" />
           </div>
           <span className="fs-4 fw-bold gradient-text" style={{ fontFamily: 'Outfit' }}>
-            Truson-AI-Generator
+            Neurova
           </span>
         </Link>
 

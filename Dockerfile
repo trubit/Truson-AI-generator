@@ -1,4 +1,4 @@
-# Multi-Stage Dockerfile for Truson-AI-Generator Platform
+# Multi-Stage Dockerfile for Neurova Platform
 
 # Base Stage
 FROM node:20-alpine AS base

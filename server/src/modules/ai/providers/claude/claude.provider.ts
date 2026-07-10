@@ -43,7 +43,7 @@ export class ClaudeProvider implements IAIProvider {
       const response = await this.client.messages.create({
         model,
         max_tokens: options?.maxTokens || 2048,
-        system: options?.systemPrompt || 'You are Truson-AI, an enterprise software architecture AI generator.',
+        system: options?.systemPrompt || 'You are Neurova, an enterprise software architecture AI generator.',
         messages: [{ role: 'user', content: prompt }],
       });
 

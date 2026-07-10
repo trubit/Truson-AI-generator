@@ -27,6 +27,8 @@ const PromptHistorySchema = new Schema<IPromptHistoryDocument>(
   }
 );
 
+PromptHistorySchema.index({ user: 1, createdAt: -1 });
+
 export const PromptHistoryModel = mongoose.model<IPromptHistoryDocument>(
   'PromptHistory',
   PromptHistorySchema

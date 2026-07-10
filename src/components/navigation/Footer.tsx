@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
       <div className="container-fluid">
         <div className="row align-items-center">
           <div className="col-md-6 mb-3 mb-md-0">
-            <span className="fw-bold gradient-text">Truson-AI-Generator</span> — Enterprise AI Platform Foundation.
+            <span className="fw-bold gradient-text">Neurova</span> — Enterprise AI Platform Foundation.
           </div>
           <div className="col-md-6 text-md-end d-flex gap-3 justify-content-md-end">
             <Link to="/landing" className="text-secondary hover-text-white text-decoration-none">

@@ -5,7 +5,7 @@ test.describe('AI Prompt Generator Workspace E2E Suite', () => {
     // Navigate to Login Page
     await page.goto('/login');
     // Fill credentials & simulate auth session setup
-    await page.fill('input[name="loginIdentifier"]', 'architect@truson.ai');
+    await page.fill('input[name="loginIdentifier"]', 'architect@neurova.ai');
     await page.fill('input[name="password"]', 'Password123!');
   });
 

@@ -46,7 +46,7 @@ export const RegisterPage: React.FC = () => {
           Create Account
         </h5>
         <span className="text-secondary opacity-75" style={{ fontSize: '0.78rem' }}>
-          Get started with Truson-AI
+          Get started with Neurova
         </span>
       </div>
 

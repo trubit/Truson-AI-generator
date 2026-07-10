@@ -47,7 +47,7 @@ export const ForgotPasswordPage: React.FC = () => {
           <Input
             label="Email Address"
             type="email"
-            placeholder="architect@truson.ai"
+            placeholder="architect@neurova.ai"
             leftIcon={<Mail size={15} />}
             error={errors.email?.message}
             {...register('email')}

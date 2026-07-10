@@ -53,7 +53,7 @@ export const LoginPage: React.FC = () => {
         <div className="mb-2">
           <Input
             label="Email or Username"
-            placeholder="architect@truson.ai"
+            placeholder="architect@neurova.ai"
             leftIcon={<Mail size={15} />}
             error={errors.loginIdentifier?.message}
             {...register('loginIdentifier')}

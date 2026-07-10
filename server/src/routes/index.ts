@@ -17,7 +17,7 @@ router.get('/health', async (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     status: 'online',
-    system: 'Truson-AI-Generator Enterprise Backend',
+    system: 'Neurova Enterprise Backend',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     database: {

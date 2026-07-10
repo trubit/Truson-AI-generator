@@ -37,12 +37,12 @@ export const AIOutputPanel: React.FC<AIOutputPanelProps> = ({
       case 'pdf':
         // Future proof PDF builder mock wrapper (downloads plain file with PDF instructions inside)
         mimeType = 'application/pdf;charset=utf-8';
-        finalContent = `%PDF-1.4\n%-- Truson-AI Generated Document PDF Structure --\n\n${content}`;
+        finalContent = `%PDF-1.4\n%-- Neurova Generated Document PDF Structure --\n\n${content}`;
         fileExtension = 'pdf';
         break;
       case 'docx':
         mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        finalContent = `[DOCX-COMPATIBLE]\nTitle: Truson-AI Generated Output\n\n${content}`;
+        finalContent = `[DOCX-COMPATIBLE]\nTitle: Neurova Generated Output\n\n${content}`;
         fileExtension = 'docx';
         break;
     }

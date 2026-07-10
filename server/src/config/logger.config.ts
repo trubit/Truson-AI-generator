@@ -10,7 +10,7 @@ export const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: 'truson-ai-backend' },
+  defaultMeta: { service: 'neurova-backend' },
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(

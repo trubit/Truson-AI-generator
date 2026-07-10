@@ -8,6 +8,10 @@ export const connectDatabase = async (): Promise<typeof mongoose> => {
 
     const conn = await mongoose.connect(env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 500,
+      minPoolSize: 50,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
     });
 
     logger.info(`✅ MongoDB Connected: ${conn.connection.host} / ${conn.connection.name}`);

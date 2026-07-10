@@ -3,12 +3,12 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:7.0
-    container_name: truson-mongodb
+    container_name: neurova-mongodb
     restart: always
     ports:
       - '27017:27017'
     environment:
-      MONGO_INITDB_DATABASE: truson_ai_generator
+      MONGO_INITDB_DATABASE: neurova
     volumes:
       - mongodb_data:/data/db
 
@@ -16,14 +16,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: truson-backend
+    container_name: neurova-backend
     restart: always
     ports:
       - '5050:5050'
     environment:
       - NODE_ENV=development
       - PORT=5050
-      - MONGODB_URI=mongodb://mongodb:27017/truson_ai_generator
+      - MONGODB_URI=mongodb://mongodb:27017/neurova
       - CLIENT_URL=http://localhost:5180
     depends_on:
       - mongodb

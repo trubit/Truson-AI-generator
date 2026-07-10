@@ -43,7 +43,7 @@ export class OpenAIProvider implements IAIProvider {
       const response = await this.client.chat.completions.create({
         model,
         messages: [
-          { role: 'system', content: options?.systemPrompt || 'You are Truson-AI, an enterprise software architecture AI generator.' },
+          { role: 'system', content: options?.systemPrompt || 'You are Neurova, an enterprise software architecture AI generator.' },
           { role: 'user', content: prompt },
         ],
         temperature: options?.temperature !== undefined ? options.temperature : 0.7,

@@ -27,6 +27,8 @@ const ConversationSchema = new Schema<IConversationDocument>(
   }
 );
 
+ConversationSchema.index({ user: 1, status: 1, isPinned: -1, updatedAt: -1 });
+
 export const ConversationModel = mongoose.model<IConversationDocument>(
   'Conversation',
   ConversationSchema

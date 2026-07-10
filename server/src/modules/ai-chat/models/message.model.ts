@@ -40,4 +40,6 @@ const MessageSchema = new Schema<IMessageDocument>(
   }
 );
 
+MessageSchema.index({ conversation: 1, createdAt: 1 });
+
 export const MessageModel = mongoose.model<IMessageDocument>('Message', MessageSchema);

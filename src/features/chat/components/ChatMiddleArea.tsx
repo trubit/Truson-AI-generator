@@ -125,7 +125,7 @@ export const ChatMiddleArea: React.FC = () => {
         {!activeConversationId ? (
           <div className="d-flex flex-column align-items-center justify-content-center h-100 text-center p-5 text-secondary">
             <Bot size={48} className="text-purple mb-3 opacity-40 animate-pulse" />
-            <h5 className="fw-semibold text-light">Welcome to Truson-AI Conversational Assistant</h5>
+            <h5 className="fw-semibold text-light">Welcome to Neurova Conversational Assistant</h5>
             <p className="small max-w-sm mt-1">
               Select an existing chat session from the left menu or hit "New Conversation" to start refining your ideas.
             </p>

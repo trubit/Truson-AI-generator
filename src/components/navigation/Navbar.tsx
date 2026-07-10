@@ -26,12 +26,12 @@ export const Navbar: React.FC = () => {
         <Link to="/" className="navbar-brand d-flex align-items-center text-decoration-none">
           <img
             src="/logo.png"
-            alt="Truson AI Logo"
+            alt="Neurova Logo"
             className="rounded-3 me-2 border border-purple-subtle"
             style={{ width: 38, height: 38, objectFit: 'cover' }}
           />
           <span className="fs-4 fw-bold gradient-text" style={{ fontFamily: 'Outfit' }}>
-            Truson-AI-Generator
+            Neurova
           </span>
         </Link>
 

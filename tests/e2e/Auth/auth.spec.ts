@@ -16,13 +16,13 @@ test.describe('Enterprise Authentication & Authorization Suite', () => {
   test('should display forgot password form', async ({ page }) => {
     await page.goto('/forgot-password', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('form')).toBeVisible();
-    await page.fill('input[type="email"]', 'architect@truson.ai');
+    await page.fill('input[type="email"]', 'architect@neurova.ai');
     await page.click('button[type="submit"]');
   });
 
   test('should handle valid login flow', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
-    await page.fill('input[name="loginIdentifier"]', 'architect@truson.ai');
+    await page.fill('input[name="loginIdentifier"]', 'architect@neurova.ai');
     await page.fill('input[name="password"]', 'Password123!');
   });
 });

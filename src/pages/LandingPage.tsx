@@ -20,15 +20,15 @@ export const LandingPage: React.FC = () => {
   const faqItems = [
     {
       id: 'faq-1',
-      header: 'What is Truson-AI-Generator?',
+      header: 'What is Neurova?',
       content:
-        'Truson-AI-Generator is a premium enterprise AI platform engineered for full-stack developers, software architects, and content engineering teams to generate high-precision code prompts, architecture specs, and marketing copy.',
+        'Neurova is a premium enterprise AI platform engineered for full-stack developers, software architects, and content engineering teams to generate high-precision code prompts, architecture specs, and marketing copy.',
     },
     {
       id: 'faq-2',
       header: 'Which AI providers are supported?',
       content:
-        'Truson includes a zero-coupling AI Provider Abstraction Layer supporting OpenAI (GPT-4o), Anthropic Claude (Claude 3.5 Sonnet), and Google Gemini (Gemini 1.5 Pro).',
+        'Neurova includes a zero-coupling AI Provider Abstraction Layer supporting OpenAI (GPT-4o), Anthropic Claude (Claude 3.5 Sonnet), and Google Gemini (Gemini 1.5 Pro).',
     },
     {
       id: 'faq-3',
@@ -40,7 +40,7 @@ export const LandingPage: React.FC = () => {
       id: 'faq-4',
       header: 'Is Paystack payment supported?',
       content:
-        'Yes, Truson-AI-Generator is fully configured with Paystack billing and subscription management.',
+        'Yes, Neurova is fully configured with Paystack billing and subscription management.',
     },
   ];
 
@@ -138,13 +138,13 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. WHY CHOOSE TRUSON-AI */}
+      {/* 4. WHY CHOOSE NEUROVA */}
       <section className="py-5 bg-body-tertiary border-top border-secondary">
         <div className="container px-4">
           <div className="row align-items-center">
             <div className="col-lg-6 mb-4 mb-lg-0">
               <h2 className="fw-bold display-6 mb-3">
-                Why Choose <span className="gradient-text">Truson-AI-Generator</span>?
+                Why Choose <span className="gradient-text">Neurova</span>?
               </h2>
               <p className="text-secondary mb-4">
                 Built from the ground up for software architects requiring strict zero-coupling provider registries, Paystack payment support, and Zod-validated configurations.
@@ -168,7 +168,7 @@ export const LandingPage: React.FC = () => {
                   <h4 className="fw-bold mb-0">Enterprise Foundation Ready</h4>
                 </div>
                 <p className="text-secondary small mb-0">
-                  Truson-AI provides a fully responsive UI/UX system, light/dark theme persistence, and modular workspace components.
+                  Neurova provides a fully responsive UI/UX system, light/dark theme persistence, and modular workspace components.
                 </p>
               </Card>
             </div>

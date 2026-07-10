@@ -1,11 +1,15 @@
 import express, { Application } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import compression from 'compression';
 import { helmetMiddleware, corsMiddleware, apiLimiter } from './middleware/security.middleware';
 import { errorHandler } from './middleware/error.middleware';
 import apiRouter from './routes/index';
 
 const app: Application = express();
+
+// Compress all response payloads
+app.use(compression());
 
 // Security Middlewares
 app.use(helmetMiddleware);

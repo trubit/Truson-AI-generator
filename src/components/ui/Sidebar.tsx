@@ -45,7 +45,7 @@ export const Sidebar: React.FC = () => {
       <div className="glass-card p-3 mt-auto rounded-3 border-purple">
         <div className="d-flex align-items-center justify-content-between mb-1">
           <div className="d-flex align-items-center gap-1.5 text-purple fw-bold small">
-            <Sparkles size={15} /> Truson-AI Pro
+            <Sparkles size={15} /> Neurova Pro
           </div>
           <span className="badge bg-purple-subtle text-purple border border-purple" style={{ fontSize: '0.65rem' }}>
             Active

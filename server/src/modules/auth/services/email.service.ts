@@ -13,10 +13,10 @@ class EmailService {
 
   public async sendVerificationEmail(toEmail: string, name: string, token: string): Promise<boolean> {
     const verifyUrl = `${env.CLIENT_URL}/verify-email?token=${token}`;
-    const subject = 'Verify your Truson-AI Account';
+    const subject = 'Verify your Neurova Account';
     const html = `
       <div style="font-family: Arial, sans-serif; background-color: #090d16; color: #f9fafb; padding: 40px; border-radius: 12px;">
-        <h2 style="color: #a78bfa; margin-bottom: 20px;">Welcome to Truson-AI-Generator</h2>
+        <h2 style="color: #a78bfa; margin-bottom: 20px;">Welcome to Neurova</h2>
         <p>Hi ${name},</p>
         <p>Thank you for registering. Please verify your email address to activate your account:</p>
         <div style="margin: 30px 0;">
@@ -31,7 +31,7 @@ class EmailService {
 
   public async sendPasswordResetEmail(toEmail: string, name: string, token: string): Promise<boolean> {
     const resetUrl = `${env.CLIENT_URL}/reset-password?token=${token}`;
-    const subject = 'Reset your Truson-AI Password';
+    const subject = 'Reset your Neurova Password';
     const html = `
       <div style="font-family: Arial, sans-serif; background-color: #090d16; color: #f9fafb; padding: 40px; border-radius: 12px;">
         <h2 style="color: #22d3ee; margin-bottom: 20px;">Password Reset Request</h2>
@@ -54,7 +54,7 @@ class EmailService {
         return true;
       }
       await this.resend.emails.send({
-        from: 'Truson-AI <noreply@truson.ai>',
+        from: 'Neurova <noreply@neurova.ai>',
         to,
         subject,
         html,

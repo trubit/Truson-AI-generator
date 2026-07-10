@@ -34,12 +34,12 @@ export const AuthLayout: React.FC = () => {
           <div className="d-inline-flex align-items-center justify-content-center p-2 rounded-4 bg-dark bg-opacity-80 border border-purple-subtle shadow-lg mb-2">
             <img
               src="/logo.png"
-              alt="Truson AI Logo"
+              alt="Neurova Logo"
               style={{ width: '42px', height: '42px', objectFit: 'cover', borderRadius: '10px' }}
             />
           </div>
           <h4 className="fw-bold gradient-text mb-0" style={{ fontFamily: 'Outfit', letterSpacing: '-0.02em' }}>
-            Truson-AI
+            Neurova
           </h4>
           <p className="text-secondary small mb-0" style={{ fontSize: '0.78rem' }}>
             Enterprise AI Platform
