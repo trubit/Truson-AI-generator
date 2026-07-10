@@ -189,6 +189,34 @@ export class AIRegistryService {
       status: 'FAILED',
     }).catch((err) => logger.error(`[AIRegistry] Failed to save error history log: ${err.message}`));
 
+    // If we are in development mode, return a mock response to ensure local testing works seamlessly
+    if (process.env.NODE_ENV === 'development') {
+      logger.warn(`[AIRegistry] All live AI providers failed or are out of quota. Falling back to mock completion in non-production mode.`);
+      const mockText = `## Mock Generation Fallback
+
+All live AI providers failed (last error: ${lastError?.message || 'quota exceeded'}). Returning development mock response.
+
+### Generated Text Outline
+1. **Introduction**: A high-quality placeholder section.
+2. **Analysis**: Under development configuration.
+3. **Conclusion**: Replace with valid keys in \`.env\`.
+
+*Generated at: ${new Date().toISOString()}*`;
+
+      return {
+        provider: 'openai',
+        model: 'dev-fallback-mock',
+        text: mockText,
+        usage: {
+          promptTokens: 120,
+          completionTokens: 250,
+          totalTokens: 370,
+        },
+        latencyMs: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+      };
+    }
+
     throw new AppError(
       `AI Engine failover exhausted. All providers failed. Last error: ${lastError?.message || 'unknown'}`,
       503
