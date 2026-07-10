@@ -32,7 +32,7 @@ export class PromptEngineService {
     const template = getTemplateForRequest(params.category, params.promptType, params.techStack);
     
     // Perform parameter interpolation
-    let generatedPrompt = template.templateText
+    const generatedPrompt = template.templateText
       .replace(/{requirements}/g, params.requirements)
       .replace(/{architectureDetails}/g, params.architectureDetails || 'N/A')
       .replace(/{category}/g, params.category)

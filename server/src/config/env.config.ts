@@ -12,9 +12,9 @@ const envSchema = z.object({
 
   MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
 
-  JWT_SECRET: z.string().min(8, 'JWT_SECRET must be at least 8 characters'),
-  JWT_REFRESH_SECRET: z.string().min(8, 'JWT_REFRESH_SECRET must be at least 8 characters'),
-  COOKIE_SECRET: z.string().min(8, 'COOKIE_SECRET must be at least 8 characters'),
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+  JWT_REFRESH_SECRET: z.string().min(32, 'JWT_REFRESH_SECRET must be at least 32 characters'),
+  COOKIE_SECRET: z.string().min(32, 'COOKIE_SECRET must be at least 32 characters'),
 
   OPENAI_API_KEY: z.string().min(1, 'OPENAI_API_KEY is required'),
   ANTHROPIC_API_KEY: z.string().min(1, 'ANTHROPIC_API_KEY is required'),

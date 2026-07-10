@@ -9,14 +9,12 @@ import {
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
-  HelpCircle,
-  Layers,
   Terminal,
   Database,
   Cloud,
 } from 'lucide-react';
 import { Button, Card, Badge, Accordion } from '../components/ui';
-import { slideUp, staggerContainer } from '../utils/animations';
+import { slideUp } from '../utils/animations';
 
 export const LandingPage: React.FC = () => {
   const faqItems = [

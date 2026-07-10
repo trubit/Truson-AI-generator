@@ -22,7 +22,7 @@ export const authenticate = (req: AuthenticatedRequest, res: Response, next: Nex
     const decoded = tokenService.verifyAccessToken(token);
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch (_error) {
     res.status(401).json({ success: false, message: 'Invalid or expired access token.' });
   }
 };

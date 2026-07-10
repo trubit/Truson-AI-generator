@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { authApi } from '../api/auth.api';
 import { Card, Button, Spinner } from '../../../components/ui';
@@ -9,7 +9,6 @@ export const VerifyEmailPage: React.FC = () => {
   const token = searchParams.get('token') || '';
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('Verifying email token...');
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {

@@ -10,11 +10,9 @@ import {
   ArrowRight,
   Layers,
   Terminal,
-  Cpu,
   Cloud,
   Database,
   Globe,
-  CheckCircle2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui';

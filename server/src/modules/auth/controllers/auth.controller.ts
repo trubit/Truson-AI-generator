@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { RegisterDTO, LoginDTO, ChangePasswordDTO } from '../../../../../shared/index';
 
 export class AuthController {
-  public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public register = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const dto = req.body as RegisterDTO;
       const user = await authService.register(dto);
@@ -18,7 +18,7 @@ export class AuthController {
     }
   };
 
-  public verifyEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public verifyEmail = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const { token } = req.body;
       const user = await authService.verifyEmail(token);
@@ -32,7 +32,7 @@ export class AuthController {
     }
   };
 
-  public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public login = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const dto = req.body as LoginDTO;
       const ip = req.ip || req.socket.remoteAddress;
@@ -59,7 +59,7 @@ export class AuthController {
     }
   };
 
-  public refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public refreshToken = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const token = req.cookies.refreshToken || req.body.refreshToken;
       if (!token) {
@@ -86,7 +86,7 @@ export class AuthController {
     }
   };
 
-  public logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public logout = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const token = req.cookies.refreshToken || req.body.refreshToken;
       await authService.logout(token);
@@ -98,7 +98,7 @@ export class AuthController {
     }
   };
 
-  public logoutAll = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  public logoutAll = async (req: AuthenticatedRequest, res: Response, _next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json({ success: false, message: 'Unauthenticated.' });
@@ -113,7 +113,7 @@ export class AuthController {
     }
   };
 
-  public forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public forgotPassword = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const { email } = req.body;
       await authService.forgotPassword(email);
@@ -126,7 +126,7 @@ export class AuthController {
     }
   };
 
-  public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public resetPassword = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       const { token, password } = req.body;
       await authService.resetPassword(token, password);
@@ -139,7 +139,7 @@ export class AuthController {
     }
   };
 
-  public changePassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  public changePassword = async (req: AuthenticatedRequest, res: Response, _next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json({ success: false, message: 'Unauthenticated.' });
@@ -157,7 +157,7 @@ export class AuthController {
     }
   };
 
-  public me = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  public me = async (req: AuthenticatedRequest, res: Response, _next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json({ success: false, message: 'Unauthenticated.' });
